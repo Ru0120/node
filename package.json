@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.11.13",
+    "express": "^4.21.2",
     "random": "^5.1.1",
     "robust-sum": "^1.0.0"
   },

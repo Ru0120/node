@@ -1,37 +1,45 @@
-import http from "http";
+import express, { application } from "express";
 import fs from "fs";
+const app = express();
+const port = 3000;
 
-const server = http.createServer((req, res) => {
-  if (req.url === "/news/trend") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    const news = fs.readFileSync("news.json", "utf8");
+app.use(express.json());
 
-    console.log(news);
-
-    res.write(JSON.stringify(news));
-    res.end();
-  }
-
-  if (req.url === "/zurhai") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-
-    const zurhai = { udur: "2025.01.09/Purev garag" };
-
-    res.write(JSON.stringify(zurhai));
-    res.end();
-  }
-
-  if (req.url === "/weather") {
-    res.writeHead(200, { "Counter-Type": "application/json" });
-    const weather = { udur: -15, shunu: -21 };
-    res.write(JSON.stringify(weather));
-    res.end();
-  }
-
-  res.writeHead(404, "not found");
-  res.end();
+app.get("/info", (req, res) => {
+  const info = fs.readFileSync("./info.html");
+  res, setHeader("Content-Type", "text/html");
+  res.send(info);
 });
 
-server.listen(3000);
+//app.get("/", (req, res) => {
+//res.sendFile("news");
+//});
 
-console.log("server listening on 3000");
+app.get("/movies", (req, res) => {
+  let movies = JSON.parse(fs.readFileSync("./movies.json"));
+
+  const { movieTitle } = req.query;
+
+  console.log("movieTitle", movieTitle);
+
+  const filtered = movies.filter((movie) => movie.title.includes(movieTitle));
+
+  console.log("filtered", filtered);
+
+  res.send(filtered);
+});
+app.post("/movies", (req, res) => {
+  let movie = req.body;
+
+  let movies = JSON.parse(fs.readFileSync("./movies.json"));
+
+  movies.push(movie);
+
+  fs.writeFileSync("./movies.json", JSON.stringify(movies));
+
+  res.send({ success: true, message: "movie added" });
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
