@@ -1,14 +1,11 @@
 import express from "express";
-import fs from "fs";
+
+import { movieList, movieDetail } from "../controllers/controller.js";
 
 const route = express.Router();
 
-route.get("/", (req, res) => {
-  const movies = JSON.parse(fs.readFileSync("./movies.json"));
+route.get("/", movieList);
 
-  const { movieTitile } = req.query;
-
-  res.send({ success: true, data: movies });
-});
+route.get("/:id", movieDetail);
 
 export { route };
