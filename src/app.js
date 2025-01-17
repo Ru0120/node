@@ -1,15 +1,14 @@
 import express from "express";
 import fs from "fs";
-import { route as moovieRoutes } from "./modules/movies/routes/movieRoutes.js";
+import { route as movieRoutes } from "./modules/movies/routes/movieRoutes.js";
 
 const app = express();
 
 app.use(express.json());
 
-app.use("/movies", moovieRoutes);
+app.use("/movies", movieRoutes);
 
 app.get("/", (req, res) => {
-  //html info page
   const html = fs.readFileSync("./index.html");
 
   res.setHeader("Content-type", "text/html");
